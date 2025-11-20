@@ -1,0 +1,26 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: AUTH-SERVICE
+
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/auth
+    username: postgres
+    password: postgres
+
+  redis:
+    host: redis
+    port: 6379
+
+eureka:
+  client:
+    service-url:          # dùng kebab-case, không phải serviceUrl
+      defaultZone: http://eureka-server:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

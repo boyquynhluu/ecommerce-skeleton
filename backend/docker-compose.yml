@@ -1,0 +1,126 @@
+version: "3.9"
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: ecommerce-skeleton-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: ecommerce-skeleton-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  
+      # Kafka lắng nghe trên mọi IP trong container
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+  
+      # Tên host mà các service khác (trong Docker network) dùng để connect
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  
+      # Map protocol
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  
+      # Vì chỉ có 1 broker nên replication-factor = 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  redis:
+    image: redis:7
+    container_name: ecommerce-skeleton-redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:16
+    container_name: ecommerce-skeleton-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: ecommerce-skeleton-eureka-server
+    depends_on:
+      - postgres
+    ports:
+      - "8761:8761"          # host:container
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    # Trong application-docker.yml (hoặc application.yml) của eureka-server:
+    # server.port=8761
+    # eureka.client.register-with-eureka=false
+    # eureka.client.fetch-registry=false
+
+  gateway:
+    build: ./gateway
+    container_name: ecommerce-skeleton-gateway
+    depends_on:
+      - eureka-server
+      - redis
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # nếu muốn override DB/Redis/Eureka qua env, có thể thêm ở đây
+    ports:
+      - "8080:8080"
+
+  catalog-service:
+    build: ./catalog-service
+    container_name: ecommerce-skeleton-catalog-service
+    depends_on:
+      - eureka-server
+      - postgres
+      - redis
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_R2DBC_URL=r2dbc:postgresql://postgres:5432/catalog
+      - SPRING_R2DBC_USERNAME=postgres
+      - SPRING_R2DBC_PASSWORD=postgres
+
+  order-service:
+    build: ./order-service
+    container_name: ecommerce-skeleton-order-service
+    depends_on:
+      - eureka-server
+      - postgres
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_R2DBC_URL=r2dbc:postgresql://postgres:5432/orders
+      - SPRING_R2DBC_USERNAME=postgres
+      - SPRING_R2DBC_PASSWORD=postgres
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: ecommerce-skeleton-inventory-service
+    depends_on:
+      - eureka-server
+      - postgres
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_R2DBC_URL=r2dbc:postgresql://postgres:5432/inventory
+      - SPRING_R2DBC_USERNAME=postgres
+      - SPRING_R2DBC_PASSWORD=postgres
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+volumes:
+  pgdata:

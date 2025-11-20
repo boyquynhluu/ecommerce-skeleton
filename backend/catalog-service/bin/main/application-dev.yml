@@ -1,0 +1,36 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: CATALOG-SERVICE
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/catalog
+    username: postgres
+    password: postgres
+
+  redis:
+    host: localhost
+    port: 6379
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8762/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+open:
+  api:
+    title: Catalog Service API
+    version: v1.0
+    description: Create By TaiVD
+    serverUrl: http://localhost:8082/
+    serverName: Server Test API

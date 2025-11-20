@@ -1,0 +1,25 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: order-service
+
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/orders
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: kafka:9092
+
+eureka:
+  client:
+    service-url:          # dùng kebab-case
+      defaultZone: http://eureka-server:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
