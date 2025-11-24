@@ -28,5 +28,5 @@ open:
     title: Order Service API
     version: v1.0
     description: Create By TaiVD
-    serverUrl: http://localhost:8084/
+    serverUrl: http://localhost:8084
     serverName: Server Test API

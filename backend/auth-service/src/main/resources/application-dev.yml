@@ -1,12 +1,12 @@
 server:
-  port: 8082
+  port: 8085
 
 spring:
   application:
-    name: CATALOG-SERVICE
+    name: AUTH-SERVICE
 
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/catalog
+    url: r2dbc:postgresql://localhost:5432/auth
     username: postgres
     password: postgres
 
@@ -29,8 +29,8 @@ management:
 
 open:
   api:
-    title: Catalog Service API
+    title: Auth Service API
     version: v1.0
     description: Create By TaiVD
-    serverUrl: http://localhost:8082/
+    serverUrl: http://localhost:8085
     serverName: Server Test API

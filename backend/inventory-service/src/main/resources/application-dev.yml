@@ -28,5 +28,5 @@ open:
     title: Inventory Service API
     version: v1.0
     description: Create By TaiVD
-    serverUrl: http://localhost:8083/
+    serverUrl: http://localhost:8083
     serverName: Server Test API

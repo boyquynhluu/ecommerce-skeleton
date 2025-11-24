@@ -21,6 +21,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+
 management:
   endpoints:
     web:
@@ -31,6 +35,7 @@ open:
   api:
     title: Catalog Service API
     version: v1.0
-    description: Create By TaiVD
-    serverUrl: http://localhost:8082/
-    serverName: Server Test API
+    description: Catalog Service
+    serverUrl: http://localhost:8082
+    serverName: Catalog Local
+

@@ -3,10 +3,10 @@ server:
 
 spring:
   application:
-    name: catalog-service
+    name: auth-service
 
   r2dbc:
-    url: r2dbc:postgresql://postgres:5432/catalog
+    url: r2dbc:postgresql://postgres:5432/auth
     username: postgres
     password: postgres
 

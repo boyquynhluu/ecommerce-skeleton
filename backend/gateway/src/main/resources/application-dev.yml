@@ -98,7 +98,7 @@ springdoc:
       # API inventory
       - name: ${app.inventory-name}
         url: /api-docs/inventory
-      # API inventory
+      # API auth
       - name: ${app.auth-name}
         url: /api-docs/auth
 
