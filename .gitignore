@@ -1,0 +1,58 @@
+############################
+#     Global System Files  #
+############################
+
+.DS_Store
+Thumbs.db
+
+############################
+#     Java / Gradle       #
+############################
+
+# Gradle
+.gradle/
+build/
+bin/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+*.log
+
+# Compiled files
+*.class
+
+############################
+#     IDE / Editors       #
+############################
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+############################
+#     Backend Modules     #
+############################
+
+# Ignore build & IDE files inside backend modules
+/backend/**/.classpath
+/backend/**/.project
+/backend/**/.settings/
+backend/**/bin/
+backend/**/build/
+backend/**/out/
+
+############################
+#     Frontend            #
+############################
+
+/frontend/node_modules/
+/frontend/build/
